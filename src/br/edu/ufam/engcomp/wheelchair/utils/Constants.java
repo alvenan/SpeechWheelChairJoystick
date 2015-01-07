@@ -33,5 +33,7 @@ public class Constants {
 
     public static final int RQS_USB_PERMISSION = 0;
     public static final String ACTION_USB_PERMISSION = "arduino-er.usb_permission";
+    
+	public static final int RESULT_SPEECH = 1;
 
 }
