@@ -6,7 +6,10 @@ import java.util.Arrays;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -16,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.edu.ufam.engcomp.wheelchair.adk.AbsAdkActivity;
 import br.edu.ufam.engcomp.wheelchair.joystick.JoystickComponent;
-import br.edu.ufam.engcomp.wheelchair.speech.SpeechService;
+import br.edu.ufam.engcomp.wheelchair.speech.SpeechComponent;
 import br.edu.ufam.engcomp.wheelchair.utils.Constants;
 
 public class MainActivity extends AbsAdkActivity {
@@ -24,14 +27,37 @@ public class MainActivity extends AbsAdkActivity {
 	private RelativeLayout joystickLayout;
 	private JoystickComponent joystick;
 
-	SpeechService service;
+	private String direction = "stop";
 
 	private ImageButton voiceCommandButton;
-	private TextView text;
 
 	private boolean enableLogcatDebug = false;
 
 	private boolean isRunning = false;
+
+	private Handler handler;
+
+	private final Runnable writer = new Runnable() {
+
+		@Override
+		public void run() {
+			if (!direction.equals("stop")) {
+				WriteAdk(SpeechComponent.speechDirection(direction));
+				long now = SystemClock.uptimeMillis();
+				long next = now + (100 - now % 1000);
+				Log.i("###","ENVIANDO");
+				isRunning=true;
+
+				handler.postAtTime(writer, next);
+			} else {
+				if (isRunning) {
+					handler.removeCallbacks(writer);
+					isRunning = false;
+				}
+			}
+
+		}
+	};
 
 	@Override
 	protected void doOnCreate(Bundle savedInstanceState) {
@@ -46,18 +72,20 @@ public class MainActivity extends AbsAdkActivity {
 	public void initilize() {
 		joystickLayout = (RelativeLayout) findViewById(R.id.joystick_layout);
 		voiceCommandButton = (ImageButton) findViewById(R.id.voice_button);
-		text = (TextView) findViewById(R.id.voice_text);
 		joystick = new JoystickComponent(getApplicationContext(),
 				joystickLayout, R.drawable.joystick_button);
+		handler = new Handler();
+//		writer.run();
 	}
 
 	public OnTouchListener onTouchJoystickListener() {
 		return new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if (isRunning) {
+					direction = "stop";
+				}
 				joystick.drawStick(event);
-				text.setText(Arrays.toString(joystick
-						.getJoystickPositionInByte(event, enableLogcatDebug)));
 				WriteAdk(joystick.getJoystickPositionInByte(event,
 						enableLogcatDebug));
 				return true;
@@ -77,7 +105,6 @@ public class MainActivity extends AbsAdkActivity {
 
 				try {
 					startActivityForResult(intent, Constants.RESULT_SPEECH);
-					text.setText("");
 				} catch (ActivityNotFoundException a) {
 					Toast t = Toast.makeText(getApplicationContext(),
 							"Ops! Your device doesn't support Speech to Text",
@@ -98,10 +125,6 @@ public class MainActivity extends AbsAdkActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (isRunning) {
-			onCancelService();
-		}
-		isRunning = true;
 
 		switch (requestCode) {
 		case Constants.RESULT_SPEECH: {
@@ -109,20 +132,17 @@ public class MainActivity extends AbsAdkActivity {
 
 				ArrayList<String> textDirection = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-				text.setText(textDirection.get(0));
-				service = new SpeechService();
-				service.execute(textDirection.get(0));
+				direction = textDirection.get(0);
+				if (!isRunning) {
+					long now = SystemClock.uptimeMillis();
+					long next = now + (100 - now % 1000);
+
+					handler.postAtTime(writer, next);
+					isRunning = true;
+				}
 			}
 			break;
 		}
-
-		}
-	}
-
-	public void onCancelService() {
-		if (isRunning) {
-			isRunning = false;
-			service.cancel(true);
 
 		}
 	}

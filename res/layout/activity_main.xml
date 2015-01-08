@@ -8,30 +8,22 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="39dp" >
+        android:layout_marginTop="39dp"
+        android:orientation="vertical" >
 
         <ImageButton
             android:id="@+id/voice_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_btn_speak_now" />
-
-        <TextView
-            android:id="@+id/voice_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_gravity="right"
         android:id="@+id/joystick_layout"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_gravity="right"
         android:background="@drawable/joystick_background" >
-
     </RelativeLayout>
 
 </LinearLayout>
