@@ -33,31 +33,31 @@ public class MainActivity extends AbsAdkActivity {
 
 	private boolean enableLogcatDebug = false;
 
-	private boolean isRunning = false;
+	// private boolean isRunning = false;
 
-	private Handler handler;
+	// private Handler handler;
 
-	private final Runnable writer = new Runnable() {
-
-		@Override
-		public void run() {
-			if (!direction.equals("stop")) {
-				WriteAdk(SpeechComponent.speechDirection(direction));
-				long now = SystemClock.uptimeMillis();
-				long next = now + (100 - now % 1000);
-				Log.i("###","ENVIANDO");
-				isRunning=true;
-
-				handler.postAtTime(writer, next);
-			} else {
-				if (isRunning) {
-					handler.removeCallbacks(writer);
-					isRunning = false;
-				}
-			}
-
-		}
-	};
+	// private final Runnable writer = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// if (!direction.equals("stop")) {
+	// WriteAdk(SpeechComponent.speechDirection(direction));
+	// long now = SystemClock.uptimeMillis();
+	// long next = now + (100 - now % 1000);
+	// Log.i("###","ENVIANDO");
+	// isRunning=true;
+	//
+	// handler.postAtTime(writer, next);
+	// } else {
+	// if (isRunning) {
+	// handler.removeCallbacks(writer);
+	// isRunning = false;
+	// }
+	// }
+	//
+	// }
+	// };
 
 	@Override
 	protected void doOnCreate(Bundle savedInstanceState) {
@@ -74,17 +74,17 @@ public class MainActivity extends AbsAdkActivity {
 		voiceCommandButton = (ImageButton) findViewById(R.id.voice_button);
 		joystick = new JoystickComponent(getApplicationContext(),
 				joystickLayout, R.drawable.joystick_button);
-		handler = new Handler();
-//		writer.run();
+		// handler = new Handler();
+		// writer.run();
 	}
 
 	public OnTouchListener onTouchJoystickListener() {
 		return new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (isRunning) {
-					direction = "stop";
-				}
+				// if (isRunning) {
+				// direction = "stop";
+				// }
 				joystick.drawStick(event);
 				WriteAdk(joystick.getJoystickPositionInByte(event,
 						enableLogcatDebug));
@@ -133,18 +133,24 @@ public class MainActivity extends AbsAdkActivity {
 				ArrayList<String> textDirection = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				direction = textDirection.get(0);
-				if (!isRunning) {
-					long now = SystemClock.uptimeMillis();
-					long next = now + (100 - now % 1000);
-
-					handler.postAtTime(writer, next);
-					isRunning = true;
-				}
+				// if (!isRunning) {
+				// long now = SystemClock.uptimeMillis();
+				// long next = now + (100 - now % 1000);
+				//
+				// handler.postAtTime(writer, next);
+				// isRunning = true;
+				// }
 			}
 			break;
 		}
 
 		}
+	}
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		WriteAdk(SpeechComponent.speechDirection(direction));
 	}
 
 	@Override
