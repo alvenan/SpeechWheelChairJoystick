@@ -298,8 +298,8 @@ public class JoystickComponent {
 
 	private void setJoystickParams() {
 		this.setStickSize(Constants.STICK_WIDTH, Constants.STICK_HEIGHT);
-		this.setLayoutAlpha(Constants.LAYOUT_ALPHA);
-		this.setStickAlpha(Constants.STICK_ALPHA);
+//		this.setLayoutAlpha(Constants.LAYOUT_ALPHA);
+//		this.setStickAlpha(Constants.STICK_ALPHA);
 		this.setOffset(Constants.OFFSET);
 		this.setMinimumDistance(Constants.MIN_DISTANCE);
 	}

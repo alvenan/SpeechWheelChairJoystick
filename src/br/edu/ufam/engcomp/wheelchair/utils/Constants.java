@@ -25,14 +25,14 @@ public class Constants {
     public static final int LAYOUT_BORDER = 200;
     public static final int STICK_ALPHA = 100;
     public static final int LAYOUT_ALPHA = 150;
-    public static final int OFFSET = 90;
+    public static final int OFFSET = 120;
     public static final int MIN_DISTANCE = 20;
-    public static final int STICK_WIDTH = 150;
-    public static final int STICK_HEIGHT = 150;
+    public static final int STICK_WIDTH = 240;
+    public static final int STICK_HEIGHT = 240;
     public static final int A_HUNDRED_PERCENT = 100;
 
     public static final int RQS_USB_PERMISSION = 0;
-    public static final String ACTION_USB_PERMISSION = "arduino-er.usb_permission";
+    public static final String ACTION_USB_PERMISSION = "engcomp-ufam.usb_permission";
     
 	public static final int RESULT_SPEECH = 1;
 

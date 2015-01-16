@@ -133,6 +133,7 @@ public class MainActivity extends AbsAdkActivity {
 				ArrayList<String> textDirection = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				direction = textDirection.get(0);
+				create = false;
 				// if (!isRunning) {
 				// long now = SystemClock.uptimeMillis();
 				// long next = now + (100 - now % 1000);

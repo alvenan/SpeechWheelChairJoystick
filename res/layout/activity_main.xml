@@ -5,25 +5,32 @@
     android:orientation="horizontal"
     tools:context="br.edu.ufam.engcomp.wheelchair.MainActivity" >
 
-    <LinearLayout
+    <ImageButton
+        android:id="@+id/voice_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:orientation="vertical" >
+        android:src="@android:drawable/ic_btn_speak_now" />
 
-        <ImageButton
-            android:id="@+id/voice_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_btn_speak_now" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="120dp"
+        android:paddingTop="20dp" >
+
+        <RelativeLayout
+            android:id="@+id/joystick_layout"
+            android:layout_width="315dp"
+            android:layout_height="315dp" >
+
+            <RelativeLayout
+                android:layout_width="275dp"
+                android:layout_height="275dp"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/joystick_background" >
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/joystick_layout"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="right"
-        android:background="@drawable/joystick_background" >
-    </RelativeLayout>
 
 </LinearLayout>
