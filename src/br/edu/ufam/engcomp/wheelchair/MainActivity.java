@@ -1,9 +1,11 @@
 package br.edu.ufam.engcomp.wheelchair;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -19,6 +21,7 @@ import br.edu.ufam.engcomp.wheelchair.adk.AbsAdkActivity;
 import br.edu.ufam.engcomp.wheelchair.joystick.JoystickComponent;
 import br.edu.ufam.engcomp.wheelchair.speech.SpeechComponent;
 
+@SuppressLint("NewApi")
 public class MainActivity extends AbsAdkActivity implements
 		android.view.View.OnClickListener {
 
@@ -33,7 +36,7 @@ public class MainActivity extends AbsAdkActivity implements
 
 	private SpeechRecognizer sr;
 
-	private TextView mText;
+	private ArrayList<TextView> tvDirections;
 
 	// private boolean isRunning = false;
 
@@ -64,9 +67,9 @@ public class MainActivity extends AbsAdkActivity implements
 	@Override
 	protected void doOnCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_main);
-
+		FullScreencall();
 		initilize();
-
+		tvDirections.get(4).setTextColor(Color.RED);
 		joystickLayout.setOnTouchListener(onTouchJoystickListener());
 		voiceCommandButton.setOnClickListener(this);
 		sr = SpeechRecognizer.createSpeechRecognizer(this);
@@ -75,11 +78,18 @@ public class MainActivity extends AbsAdkActivity implements
 	}
 
 	public void initilize() {
+
 		joystickLayout = (RelativeLayout) findViewById(R.id.joystick_layout);
 		voiceCommandButton = (ImageButton) findViewById(R.id.voice_button);
 		joystick = new JoystickComponent(getApplicationContext(),
 				joystickLayout, R.drawable.joystick_button);
-		mText = (TextView) findViewById(R.id.textView1);
+
+		tvDirections = new ArrayList<TextView>();
+		tvDirections.add((TextView) findViewById(R.id.tv_front));
+		tvDirections.add((TextView) findViewById(R.id.tv_back));
+		tvDirections.add((TextView) findViewById(R.id.tv_right));
+		tvDirections.add((TextView) findViewById(R.id.tv_left));
+		tvDirections.add((TextView) findViewById(R.id.tv_stop));
 		// handler = new Handler();
 		// writer.run();
 	}
@@ -91,33 +101,11 @@ public class MainActivity extends AbsAdkActivity implements
 				// if (isRunning) {
 				// direction = "stop";
 				// }
+				SpeechComponent.setAllTextColorBlack(tvDirections);
 				joystick.drawStick(event);
 				WriteAdk(joystick.getJoystickPositionInByte(event,
 						enableLogcatDebug));
 				return true;
-			}
-		};
-	}
-
-	public View.OnClickListener onClickToSpeakListener() {
-		return new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(
-						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-
-				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-
-				// try {
-				// startActivityForResult(intent, Constants.RESULT_SPEECH);
-				// } catch (ActivityNotFoundException a) {
-				// Toast t = Toast.makeText(getApplicationContext(),
-				// "Ops! Your device doesn't support Speech to Text",
-				// Toast.LENGTH_SHORT);
-				// t.show();
-				// }
-
 			}
 		};
 	}
@@ -128,32 +116,6 @@ public class MainActivity extends AbsAdkActivity implements
 		joystick.drawStick();
 	}
 
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// super.onActivityResult(requestCode, resultCode, data);
-	//
-	// switch (requestCode) {
-	// case Constants.RESULT_SPEECH: {
-	// if (resultCode == RESULT_OK && null != data) {
-	//
-	// ArrayList<String> textDirection = data
-	// .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-	// direction = textDirection.get(0);
-	// // if (!isRunning) {
-	// // long now = SystemClock.uptimeMillis();
-	// // long next = now + (100 - now % 1000);
-	// //
-	// // handler.postAtTime(writer, next);
-	// // isRunning = true;
-	// // }
-	// }
-	// break;
-	// }
-	//
-	// }
-	// }
-
 	@Override
 	protected void doAdkRead(String stringIn) {
 	}
@@ -161,7 +123,8 @@ public class MainActivity extends AbsAdkActivity implements
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.voice_button) {
-			view.setBackground(getResources().getDrawable(R.drawable.voice_button_pressed));
+			view.setBackground(getResources().getDrawable(
+					R.drawable.voice_button_pressed));
 			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
 					RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -174,9 +137,20 @@ public class MainActivity extends AbsAdkActivity implements
 
 	}
 
-	public class VoiceRecognition implements RecognitionListener {
-		boolean takeTheMessage = false;
+	public void FullScreencall() {
+		if (Build.VERSION.SDK_INT < 19) { // 19 or above api
+			View v = this.getWindow().getDecorView();
+			v.setSystemUiVisibility(View.GONE);
+		} else {
+			// for lower api versions.
+			View decorView = getWindow().getDecorView();
+			int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+					| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+			decorView.setSystemUiVisibility(uiOptions);
+		}
+	}
 
+	public class VoiceRecognition implements RecognitionListener {
 		@Override
 		public void onReadyForSpeech(Bundle params) {
 		}
@@ -191,6 +165,8 @@ public class MainActivity extends AbsAdkActivity implements
 
 		@Override
 		public void onBufferReceived(byte[] buffer) {
+			voiceCommandButton.setBackground(getResources().getDrawable(
+					R.drawable.voice_button));
 		}
 
 		@Override
@@ -200,6 +176,8 @@ public class MainActivity extends AbsAdkActivity implements
 		@Override
 		public void onError(int error) {
 			Log.i("@@@", "error " + error);
+			voiceCommandButton.setBackground(getResources().getDrawable(
+					R.drawable.voice_button));
 		}
 
 		@Override
@@ -207,10 +185,10 @@ public class MainActivity extends AbsAdkActivity implements
 			ArrayList<String> data = results
 					.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 			direction = data.get(0);
-			WriteAdk(SpeechComponent.speechDirection(direction));
-			takeTheMessage = true;
+			WriteAdk(SpeechComponent.doSpeech(direction, tvDirections));
 			Log.i("@@@", direction);
-			voiceCommandButton.setBackground(getResources().getDrawable(R.drawable.voice_button));
+			voiceCommandButton.setBackground(getResources().getDrawable(
+					R.drawable.voice_button));
 		}
 
 		@Override
@@ -222,4 +200,5 @@ public class MainActivity extends AbsAdkActivity implements
 		}
 
 	}
+
 }

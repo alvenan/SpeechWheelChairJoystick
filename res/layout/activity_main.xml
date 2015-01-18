@@ -6,18 +6,80 @@
     android:orientation="horizontal"
     tools:context="br.edu.ufam.engcomp.wheelchair.MainActivity" >
 
-    <ImageButton
-        android:id="@+id/voice_button"
-        android:layout_width="@dimen/voice_button_width"
-        android:layout_height="@dimen/voice_button_height"
-        android:layout_marginLeft="@dimen/voice_button_margin_left"
-        android:layout_marginTop="@dimen/voice_button_margin_top"
-        android:background="@drawable/voicebutton" />
+    <RelativeLayout
+        android:layout_width="@dimen/voice_button_layout_on"
+        android:layout_height="match_parent" >
+
+        <ImageButton
+            android:id="@+id/voice_button"
+            android:layout_width="@dimen/voice_button_width"
+            android:layout_height="@dimen/voice_button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/voice_button_margin_left"
+            android:background="@drawable/voicebutton" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/voice_button"
+            android:paddingLeft="@dimen/tv_padding_to_button"
+            android:text="Right"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_front"
+            android:layout_alignBottom="@+id/tv_front"
+            android:layout_alignRight="@+id/tv_left"
+            android:text="STOP!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/voice_button"
+            android:layout_alignLeft="@+id/voice_button"
+            android:layout_marginLeft="@dimen/tv_front_margin_left"
+            android:paddingBottom="@dimen/tv_padding_to_button"
+            android:text="Front"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_front"
+            android:layout_below="@+id/voice_button"
+            android:paddingTop="@dimen/tv_padding_to_button"
+            android:text="Back"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_right"
+            android:layout_alignBottom="@+id/tv_right"
+            android:layout_toLeftOf="@+id/tv_front"
+            android:paddingRight="@dimen/tv_padding_to_button"
+            android:text="Left"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/joystick_padding_left"
         android:paddingTop="@dimen/joystick_padding_top" >
 
         <RelativeLayout
