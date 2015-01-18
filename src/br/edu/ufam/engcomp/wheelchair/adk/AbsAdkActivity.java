@@ -36,8 +36,6 @@ public abstract class AbsAdkActivity extends Activity {
 	private FileOutputStream myAdkOutputStream;
 	boolean firstRqsPermission;
 	
-	protected boolean create = false;
-
 	// do something in onCreate()
 	protected abstract void doOnCreate(Bundle savedInstanceState);
 
@@ -48,10 +46,7 @@ public abstract class AbsAdkActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_main);
-		Log.i("###", "onCreate");
 		
-		create =true;
-
 		myUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
@@ -69,47 +64,32 @@ public abstract class AbsAdkActivity extends Activity {
 		registerReceiver(myUsbPermissionReceiver, intentFilter_UsbPermission);
 
 		firstRqsPermission = true;
-		create = true;
 		doOnCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		if(create==false){
-			recreate();
-		}
-		create = false;
-		Log.i("###", "onResume");
 
-		Log.i("###", "INPUT - " + myAdkInputStream);
-		Log.i("###", "OUTPUT - " + myAdkOutputStream);
 
 		if (myAdkInputStream == null || myAdkOutputStream == null) {
 
 			// myAdkInputStream = null;
 			// myAdkOutputStream = null;
-			Log.i("###", "IF1");
 
 			UsbAccessory[] usbAccessoryList = myUsbManager.getAccessoryList();
 			UsbAccessory usbAccessory = null;
 			if (usbAccessoryList != null) {
-				Log.i("###", "IF2");
 				usbAccessory = usbAccessoryList[0];
 
 				if (usbAccessory != null) {
-					Log.i("###", "IF3");
 					if (myUsbManager.hasPermission(usbAccessory)) {
-						Log.i("###", "IF4");
 						// already have permission
 						myUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 						OpenUsbAccessory(usbAccessory);
 					} else {
-						Log.i("###", "ELSE4");
 
 						if (firstRqsPermission) {
-							Log.i("###", "IF5");
 
 							firstRqsPermission = false;
 
@@ -145,7 +125,6 @@ public abstract class AbsAdkActivity extends Activity {
 	public void WriteAdk(byte[] buffer) {
 
 		if (myAdkOutputStream != null) {
-
 			try {
 				myAdkOutputStream.write(buffer);
 			} catch (IOException e) {
@@ -257,11 +236,7 @@ public abstract class AbsAdkActivity extends Activity {
 	private void OpenUsbAccessory(UsbAccessory acc) {
 		myAdkParcelFileDescriptor = myUsbManager.openAccessory(acc);
 
-		Log.i("###", "MyUsb - " + myUsbManager);
-		Log.i("###", "Decript - " + myAdkParcelFileDescriptor);
-		Log.i("###", "acc - " + acc);
 		if (myAdkParcelFileDescriptor != null) {
-			Log.i("###", "PASSEI!");
 			myUsbAccessory = acc;
 			FileDescriptor fileDescriptor = myAdkParcelFileDescriptor
 					.getFileDescriptor();

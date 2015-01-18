@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import br.edu.ufam.engcomp.wheelchair.R;
 import br.edu.ufam.engcomp.wheelchair.utils.Constants;
 import br.edu.ufam.engcomp.wheelchair.utils.EnumDirection;
 
@@ -20,6 +21,7 @@ public class JoystickComponent {
 	private int mOffset;
 
 	private ViewGroup mLayout;
+	private Context mContext;
 	private LayoutParams mLayoutParams;
 	private int mStick_width, mStick_height;
 
@@ -34,6 +36,7 @@ public class JoystickComponent {
 
 	public JoystickComponent(Context context, ViewGroup layout, int stick_res_id) {
 		mLayout = layout;
+		mContext = context;
 
 		mStick = BitmapFactory.decodeResource(context.getResources(),
 				stick_res_id);
@@ -45,7 +48,7 @@ public class JoystickComponent {
 
 		mDraw = new DrawCanvas(context);
 		mPaint = new Paint();
-		
+
 		this.setJoystickParams();
 	}
 
@@ -297,11 +300,14 @@ public class JoystickComponent {
 	}
 
 	private void setJoystickParams() {
-		this.setStickSize(Constants.STICK_WIDTH, Constants.STICK_HEIGHT);
-//		this.setLayoutAlpha(Constants.LAYOUT_ALPHA);
-//		this.setStickAlpha(Constants.STICK_ALPHA);
-		this.setOffset(Constants.OFFSET);
-		this.setMinimumDistance(Constants.MIN_DISTANCE);
+		this.setStickSize(
+				mContext.getResources().getDimensionPixelSize(
+						R.dimen.stick_width), mContext.getResources()
+						.getDimensionPixelSize(R.dimen.stick_height));
+		this.setOffset(mContext.getResources().getDimensionPixelSize(
+				R.dimen.stick_offset));
+		this.setMinimumDistance(mContext.getResources().getDimensionPixelSize(
+				R.dimen.stick_min_distance));
 	}
 
 	private String getJoystickPosition(MotionEvent event) {

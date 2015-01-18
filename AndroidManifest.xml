@@ -9,6 +9,7 @@
         android:targetSdkVersion="19" />
 
     <uses-feature android:name="android.hardware.usb.accessory" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:allowBackup="true"

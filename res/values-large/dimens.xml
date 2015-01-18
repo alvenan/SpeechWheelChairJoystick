@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <dimen name="voice_button_width">135dp</dimen>
+    <dimen name="voice_button_height">135dp</dimen>
+    <dimen name="voice_button_margin_left">235dp</dimen>
+    <dimen name="voice_button_margin_top">285dp</dimen>
+    
+    <dimen name="joystick_padding_left">290dp</dimen>
+    <dimen name="joystick_padding_top">90dp</dimen>    
+    <dimen name="joystick_width_out">535dp</dimen>
+    <dimen name="joystick_height_out">535dp</dimen>
+    <dimen name="joystick_width_in">475dp</dimen>
+    <dimen name="joystick_height_in">475dp</dimen>
+    <dimen name="joystick_margin_left_in">30dp</dimen>
+    <dimen name="joystick_margin_top_in">30dp</dimen>  
+    
+    <dimen name="stick_width">180dp</dimen>
+    <dimen name="stick_height">180dp</dimen>  
+    <dimen name="stick_offset">90dp</dimen> 
+    <dimen name="stick_min_distance">20dp</dimen>     
+    
+    
+</resources>
