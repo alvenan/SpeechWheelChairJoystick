@@ -4,12 +4,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     
+    <dimen name="voice_button_layout_on">635dp</dimen>
     <dimen name="voice_button_width">135dp</dimen>
     <dimen name="voice_button_height">135dp</dimen>
-    <dimen name="voice_button_margin_left">235dp</dimen>
+    <dimen name="voice_button_margin_left">227dp</dimen>
     <dimen name="voice_button_margin_top">285dp</dimen>
     
-    <dimen name="joystick_padding_left">290dp</dimen>
+    <dimen name="joystick_padding_left">90dp</dimen>
     <dimen name="joystick_padding_top">90dp</dimen>    
     <dimen name="joystick_width_out">535dp</dimen>
     <dimen name="joystick_height_out">535dp</dimen>
@@ -21,7 +22,10 @@
     <dimen name="stick_width">180dp</dimen>
     <dimen name="stick_height">180dp</dimen>  
     <dimen name="stick_offset">90dp</dimen> 
-    <dimen name="stick_min_distance">20dp</dimen>     
+    <dimen name="stick_min_distance">20dp</dimen>    
+    
+    <dimen name="tv_front_margin_left">38dp</dimen>
+    <dimen name="tv_padding_to_button">10dp</dimen>
     
     
 </resources>
