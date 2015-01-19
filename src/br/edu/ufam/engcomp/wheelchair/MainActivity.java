@@ -1,12 +1,15 @@
 package br.edu.ufam.engcomp.wheelchair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -31,6 +34,7 @@ public class MainActivity extends AbsAdkActivity implements
 	private String direction = "stop";
 
 	private ImageButton voiceCommandButton;
+	private int power;
 
 	private boolean enableLogcatDebug = false;
 
@@ -38,31 +42,24 @@ public class MainActivity extends AbsAdkActivity implements
 
 	private ArrayList<TextView> tvDirections;
 
-	// private boolean isRunning = false;
+	private boolean isRunning = true;
+	private Handler handler;
 
-	// private Handler handler;
+	private final Runnable writer = new Runnable() {
 
-	// private final Runnable writer = new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// if (!direction.equals("stop")) {
-	// WriteAdk(SpeechComponent.speechDirection(direction));
-	// long now = SystemClock.uptimeMillis();
-	// long next = now + (100 - now % 1000);
-	// Log.i("###","ENVIANDO");
-	// isRunning=true;
-	//
-	// handler.postAtTime(writer, next);
-	// } else {
-	// if (isRunning) {
-	// handler.removeCallbacks(writer);
-	// isRunning = false;
-	// }
-	// }
-	//
-	// }
-	// };
+		@Override
+		public void run() {
+			Log.i("@@@", Arrays.toString(SpeechComponent.speechDirection(
+					direction, power)));
+			if (power != 50)
+				power += 10;
+			WriteAdk(SpeechComponent.doSpeech(direction, tvDirections, power));
+			long now = SystemClock.uptimeMillis();
+			long next = now + (3000 - now % 1000);
+			handler.postAtTime(writer, next);
+
+		}
+	};
 
 	@Override
 	protected void doOnCreate(Bundle savedInstanceState) {
@@ -90,17 +87,18 @@ public class MainActivity extends AbsAdkActivity implements
 		tvDirections.add((TextView) findViewById(R.id.tv_right));
 		tvDirections.add((TextView) findViewById(R.id.tv_left));
 		tvDirections.add((TextView) findViewById(R.id.tv_stop));
-		// handler = new Handler();
-		// writer.run();
+		handler = new Handler();
+		writer.run();
 	}
 
 	public OnTouchListener onTouchJoystickListener() {
 		return new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// if (isRunning) {
-				// direction = "stop";
-				// }
+				if (isRunning) {
+					handler.removeCallbacks(writer);
+					isRunning = false;
+				}
 				SpeechComponent.setAllTextColorBlack(tvDirections);
 				joystick.drawStick(event);
 				WriteAdk(joystick.getJoystickPositionInByte(event,
@@ -185,7 +183,14 @@ public class MainActivity extends AbsAdkActivity implements
 			ArrayList<String> data = results
 					.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 			direction = data.get(0);
-			WriteAdk(SpeechComponent.doSpeech(direction, tvDirections));
+			if (!isRunning) {
+				long now = SystemClock.uptimeMillis();
+				long next = now + (1000 - now % 1000);
+				handler.postAtTime(writer, next);
+				isRunning = true;
+			}
+			power = 0;
+
 			Log.i("@@@", direction);
 			voiceCommandButton.setBackground(getResources().getDrawable(
 					R.drawable.voice_button));

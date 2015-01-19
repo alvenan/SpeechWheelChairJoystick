@@ -8,13 +8,14 @@ import br.edu.ufam.engcomp.wheelchair.utils.Constants;
 
 public class SpeechComponent {
 
-	public static byte[] doSpeech(String direction, ArrayList<TextView> tvList) {
+	public static byte[] doSpeech(String direction, ArrayList<TextView> tvList,
+			int power) {
 		changeTextColor(direction, tvList);
-		return speechDirection(direction);
+		return speechDirection(direction, power);
 
 	}
 
-	public static byte[] speechDirection(String direction) {
+	public static byte[] speechDirection(String direction, int power) {
 
 		byte[] byteCommand = { (byte) '-', (byte) ';', (byte) '-', (byte) ';',
 				(byte) '-', (byte) ';', (byte) '-' };
@@ -22,23 +23,23 @@ public class SpeechComponent {
 		if (direction.equals("front") || direction.equals("truant")
 				|| direction.equals("throat") || direction.equals("trunk")) {
 			byteCommand[0] = Constants.COMMAND_UP;
-			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE + (Constants.SEVENTY_PERCENT * 98 / 100));
+			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE + (power * 98 / 100));
 
 		}
 		if (direction.equals("back") || direction.equals("rec")
 				|| direction.equals("bec")) {
 			byteCommand[0] = Constants.COMMAND_DOWN;
-			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE - (Constants.SEVENTY_PERCENT * 9 / 10));
+			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE - (power * 9 / 10));
 
 		}
 		if (direction.equals("right")) {
 			byteCommand[0] = Constants.COMMAND_RIGHT;
-			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE - (Constants.SEVENTY_PERCENT * 9 / 10));
+			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE - (power * 9 / 10));
 
 		}
 		if (direction.equals("left")) {
 			byteCommand[0] = Constants.COMMAND_LEFT;
-			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE + (Constants.SEVENTY_PERCENT * 98 / 100));
+			byteCommand[2] = (byte) (Constants.PATTERN_DAC_VALUE + (power * 98 / 100));
 
 		}
 		if (direction.equals("stop") || direction.equals("stopped")) {
@@ -96,8 +97,8 @@ public class SpeechComponent {
 		}
 
 	}
-	
-	public static void setAllTextColorBlack(ArrayList<TextView> tvList){
+
+	public static void setAllTextColorBlack(ArrayList<TextView> tvList) {
 
 		tvList.get(0).setTextColor(Color.BLACK);
 		tvList.get(1).setTextColor(Color.BLACK);
